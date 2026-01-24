@@ -51,4 +51,38 @@ export const SelectBudgetOptions=[
   }
 ]
 
-export const AI_PROMPT='Generate Travel Plan for location: {location}, for{totalDays} Days for {traveler} with a {budget} budget, give me Hotels options list with HotelName, Hotel address, Price, hotel image url, geo coordinates, rating, descriptions and suggest an itinerary with placeName, Place Details, Place Image Url, Geo coordinates, ticket pricing, Time travel each of the location for {totalDays} with each day plan with best time to visit in JSON format'
+export const TravelStyleOptions = [
+  {
+    id: 1,
+    title: 'Relaxed',
+    desc: 'Slow-paced days with plenty of downtime',
+  },
+  {
+    id: 2,
+    title: 'Adventure',
+    desc: 'High-energy activities and exploration',
+  },
+  {
+    id: 3,
+    title: 'Culture',
+    desc: 'Museums, history, and local experiences',
+  },
+  {
+    id: 4,
+    title: 'Nightlife',
+    desc: 'Bars, clubs, and late-night fun',
+  },
+]
+
+export const InterestTags = [
+  'Food & Cafes',
+  'Nature & Parks',
+  'Museums & Art',
+  'Shopping',
+  'Beaches',
+  'Hiking',
+  'Photography',
+  'Kids Friendly',
+]
+
+export const AI_PROMPT='Generate a detailed travel plan for location: {location}, for {totalDays} Days for {traveler} with a {budget} budget and a preferred travel style of {tripStyle}. Focus on the following interests: {interests}. Give me a hotels options list with HotelName, Hotel address, Price, hotel image url, geo coordinates, rating, descriptions and suggest an itinerary with placeName, placeDetails, Place Image Url, Geo coordinates, ticket pricing, time to travel to each of the locations for {totalDays} days with each day plan and best time to visit in JSON format.'

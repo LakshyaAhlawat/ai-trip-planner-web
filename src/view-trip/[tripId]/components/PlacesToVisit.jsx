@@ -7,10 +7,17 @@ const PHOTO_REF_URL =
 
 function PlacesToVisit({ trip }) {
   const [placePhotos, setPlacePhotos] = useState({}); // To store photo URLs for each place
+  const [favoritePlaces, setFavoritePlaces] = useState({});
+  const [expandedDays, setExpandedDays] = useState({});
 
   useEffect(() => {
     if (trip?.tripData?.itinerary) {
       fetchPlacePhotos();
+      const initialExpanded = Object.keys(trip.tripData.itinerary).reduce((acc, key) => {
+        acc[key] = true;
+        return acc;
+      }, {});
+      setExpandedDays(initialExpanded);
     }
   }, [trip]);
 
@@ -39,23 +46,47 @@ function PlacesToVisit({ trip }) {
     setPlacePhotos(updatedPlacePhotos); // Update state after all photos are fetched
   };
 
+  const toggleFavorite = (placeName) => {
+    setFavoritePlaces((prev) => ({
+      ...prev,
+      [placeName]: !prev[placeName],
+    }));
+  };
+
+  const toggleDay = (dayKey) => {
+    setExpandedDays((prev) => ({
+      ...prev,
+      [dayKey]: !prev[dayKey],
+    }));
+  };
+
   return (
-    <div className="bg-gray-50 min-h-screen py-8 px-4">
+    <div className="bg-gray-50 dark:bg-slate-900 min-h-screen py-8 px-4 transition-colors duration-300">
       <h2 className="font-bold text-3xl text-center text-blue-600 mb-6">Places to Visit</h2>
 
       <div className="space-y-8">
         {trip?.tripData?.itinerary &&
-          Object.entries(trip.tripData.itinerary).map(([dayKey, day]) => {
-            return (
-              <div key={dayKey} className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-semibold text-indigo-700 mb-4">{dayKey.toUpperCase()}</h3>
-                <div className="text-lg text-gray-700 mb-4">
-                  <strong>Best Time to Visit:</strong>{' '}
-                  <span className="font-medium text-green-600">{day.best_time_to_visit}</span>
-                </div>
+          Object.entries(trip.tripData.itinerary).map(([dayKey, day]) => (
+            <div key={dayKey} className="bg-white p-6 rounded-lg shadow-lg">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-2xl font-semibold text-indigo-700">{dayKey.toUpperCase()}</h3>
+                <button
+                  type="button"
+                  onClick={() => toggleDay(dayKey)}
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  {expandedDays[dayKey] ? 'Hide day' : 'Show day'}
+                </button>
+              </div>
+              <div className="text-lg text-gray-700 mb-4">
+                <strong>Best Time to Visit:</strong>{' '}
+                <span className="font-medium text-green-600">{day.best_time_to_visit}</span>
+              </div>
+
+              {expandedDays[dayKey] && (
                 <div>
                   <strong className="block text-lg text-gray-700">Places:</strong>
-                  <div className="grid grid-cols-1 cursor-pointer transition-all hover:scale-105 md:grid-cols-2 gap-8 mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
                     {day.places?.map((place, index) => (
                       <div
                         key={index}
@@ -63,9 +94,22 @@ function PlacesToVisit({ trip }) {
                       >
                         <div className="text-lg text-gray-800 font-semibold mb-2">{place.placeName || 'Not available'}</div>
 
-                        <div className="text-gray-600 mb-2">
+                        <div className="text-gray-600 mb-2 flex items-center justify-between gap-2">
                           <strong>Ticket Pricing: </strong>
-                          <span className="text-blue-500">{place.ticket_pricing || 'Not available'}</span>
+                          <span className="text-blue-500 flex-1">{place.ticket_pricing || 'Not available'}</span>
+                          {place.placeName && (
+                            <button
+                              type="button"
+                              onClick={() => toggleFavorite(place.placeName)}
+                              className={`text-xs px-2 py-1 rounded-full border transition-all ${
+                                favoritePlaces[place.placeName]
+                                  ? 'bg-yellow-400 border-yellow-500 text-black'
+                                  : 'bg-white border-yellow-400 text-yellow-600'
+                              }`}
+                            >
+                              {favoritePlaces[place.placeName] ? '★ Saved' : '☆ Save'}
+                            </button>
+                          )}
                         </div>
 
                         <div className="text-gray-600 mb-4">
@@ -113,9 +157,9 @@ function PlacesToVisit({ trip }) {
                     ))}
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );

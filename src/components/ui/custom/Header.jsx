@@ -8,7 +8,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
-import { useNavigation } from 'react-router';
 import {
   Dialog,
   DialogContent,
@@ -16,16 +15,30 @@ import {
   DialogHeader,
   DialogClose, // Import the DialogClose component
 } from "@/components/ui/dialog";
+import { Moon, Sun } from "lucide-react";
 
 function Header() {
   const user = JSON.parse(localStorage.getItem('user')); // Fetch user from localStorage
   const [openDialog, setOpenDialog] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
     console.log(user); // Log user details
   }, []); // Add an empty dependency array to run only on mount
 
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
   const login = useGoogleLogin({
+    redirect_uri: window.location.origin,
     onSuccess: (codeResp) => {
       console.log("Access Token Response:", codeResp);
       GetUserProfile(codeResp); // Fetch user profile
@@ -52,44 +65,94 @@ function Header() {
       });
   };
 
+  const getUserInitials = () => {
+    const name = user?.name || "";
+    const parts = name.trim().split(" ");
+    if (!parts.length) return "U";
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (
+      parts[0].charAt(0).toUpperCase() + parts[parts.length - 1].charAt(0).toUpperCase()
+    );
+  };
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
   return (
-    <div className="shadow-sm flex justify-between items-center px-5 p-3">
-      <img src="/logo.svg" alt="Logo" />
-      <div>
+    <div className="shadow-sm flex justify-between items-center px-5 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
+      <a href="/" className="flex items-center gap-2">
+        <img src="/logo.svg" alt="Logo" className="h-8" />
+      </a>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="hidden sm:inline-flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+          aria-label="Toggle color theme"
+        >
+          {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </button>
         {user ? (
           <div className='flex items-center gap-3'>
+            <a href="/dashboard">
+              <Button variant="outline" className="rounded-full text-sm px-4 hidden md:inline-flex">Dashboard</Button>
+            </a>
             <a href="/my-trips">
-              <Button variant="outline" className="rounded-full">My Trips</Button>
+              <Button variant="outline" className="rounded-full text-sm px-4">My Trips</Button>
             </a>
             <a href="/create-trip">
-              <Button variant="outline" className="rounded-full">+ Create Trips</Button>
+              <Button variant="outline" className="rounded-full text-sm px-4">+ Create Trips</Button>
             </a>
 
             <Popover>
               <PopoverTrigger>
-                <img src={user?.picture} className='h-[35px] w-[35px] rounded-full' />
+                <button className='flex items-center gap-2 rounded-full bg-gray-100 hover:bg-gray-200 px-2 py-1 transition-colors'>
+                  {user?.picture && !avatarError ? (
+                    <img
+                      src={user.picture}
+                      alt={user?.name || "User"}
+                      className='h-8 w-8 rounded-full object-cover border border-gray-300'
+                      onError={() => setAvatarError(true)}
+                    />
+                  ) : (
+                    <div className='h-8 w-8 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-medium border border-gray-700'>
+                      {getUserInitials()}
+                    </div>
+                  )}
+                  <span className='hidden sm:inline text-xs text-gray-700 max-w-[120px] truncate'>
+                    {user?.name}
+                  </span>
+                </button>
               </PopoverTrigger>
-              <PopoverContent>
-                <h2
-                  className='cursor-pointer'
+              <PopoverContent align="end" className='w-52 text-sm'>
+                <div className='mb-3'>
+                  <p className='font-medium truncate'>{user?.name}</p>
+                  <p className='text-xs text-gray-500 truncate'>{user?.email}</p>
+                </div>
+                <button
+                  className='w-full text-left text-red-500 hover:bg-red-50 rounded-md px-2 py-1'
                   onClick={() => {
                     googleLogout();
                     localStorage.clear();
-                    window.location.reload();
+                    // Always send user back to the main landing page after logout
+                    window.location.href = "/";
                   }}
                 >
                   Logout
-                </h2>
+                </button>
               </PopoverContent>
             </Popover>
           </div>
         ) : (
-          <Button onClick={() => setOpenDialog(true)}>Sign In</Button>
+          <Button onClick={() => setOpenDialog(true)} className="rounded-full text-sm px-5">
+            Sign In
+          </Button>
         )}
       </div>
 
       <Dialog open={openDialog} onOpenChange={(open) => setOpenDialog(open)}>
-        <DialogContent>
+        <DialogContent className="bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-50 border border-gray-200 dark:border-slate-700">
           <DialogHeader>
             <DialogDescription>
               <img src="/logo.svg" />
