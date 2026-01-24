@@ -61,42 +61,42 @@ function PlacesToVisit({ trip }) {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-slate-900 min-h-screen py-8 px-4 transition-colors duration-300">
-      <h2 className="font-bold text-3xl text-center text-blue-600 mb-6">Places to Visit</h2>
+    <div className="mt-10 py-6 px-0">
+      <h2 className="font-bold text-3xl text-center text-blue-600 dark:text-blue-400 mb-6">Places to Visit</h2>
 
       <div className="space-y-8">
         {trip?.tripData?.itinerary &&
           Object.entries(trip.tripData.itinerary).map(([dayKey, day]) => (
-            <div key={dayKey} className="bg-white p-6 rounded-lg shadow-lg">
+            <div key={dayKey} className="bg-card text-card-foreground dark:bg-slate-900 p-6 rounded-lg shadow-lg border border-gray-100 dark:border-slate-800">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-2xl font-semibold text-indigo-700">{dayKey.toUpperCase()}</h3>
+                <h3 className="text-2xl font-semibold text-indigo-700 dark:text-indigo-300">{dayKey.toUpperCase()}</h3>
                 <button
                   type="button"
                   onClick={() => toggleDay(dayKey)}
-                  className="text-sm text-blue-600 hover:underline"
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   {expandedDays[dayKey] ? 'Hide day' : 'Show day'}
                 </button>
               </div>
-              <div className="text-lg text-gray-700 mb-4">
+              <div className="text-lg text-gray-700 dark:text-gray-200 mb-4">
                 <strong>Best Time to Visit:</strong>{' '}
-                <span className="font-medium text-green-600">{day.best_time_to_visit}</span>
+                <span className="font-medium text-green-600 dark:text-green-300">{day.best_time_to_visit}</span>
               </div>
 
               {expandedDays[dayKey] && (
                 <div>
-                  <strong className="block text-lg text-gray-700">Places:</strong>
+                  <strong className="block text-lg text-gray-700 dark:text-gray-200">Places:</strong>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
                     {day.places?.map((place, index) => (
                       <div
                         key={index}
-                        className="bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                        className="bg-blue-50 dark:bg-slate-800/80 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                       >
-                        <div className="text-lg text-gray-800 font-semibold mb-2">{place.placeName || 'Not available'}</div>
+                        <div className="text-lg text-gray-800 dark:text-gray-100 font-semibold mb-2">{place.placeName || 'Not available'}</div>
 
-                        <div className="text-gray-600 mb-2 flex items-center justify-between gap-2">
+                        <div className="text-gray-600 dark:text-gray-200 mb-2 flex items-center justify-between gap-2">
                           <strong>Ticket Pricing: </strong>
-                          <span className="text-blue-500 flex-1">{place.ticket_pricing || 'Not available'}</span>
+                          <span className="text-blue-500 dark:text-blue-300 flex-1">{place.ticket_pricing || 'Not available'}</span>
                           {place.placeName && (
                             <button
                               type="button"
@@ -104,7 +104,7 @@ function PlacesToVisit({ trip }) {
                               className={`text-xs px-2 py-1 rounded-full border transition-all ${
                                 favoritePlaces[place.placeName]
                                   ? 'bg-yellow-400 border-yellow-500 text-black'
-                                  : 'bg-white border-yellow-400 text-yellow-600'
+                                  : 'bg-white dark:bg-slate-900 border-yellow-400 text-yellow-600'
                               }`}
                             >
                               {favoritePlaces[place.placeName] ? '★ Saved' : '☆ Save'}
@@ -112,7 +112,7 @@ function PlacesToVisit({ trip }) {
                           )}
                         </div>
 
-                        <div className="text-gray-600 mb-4">
+                        <div className="text-gray-600 dark:text-gray-200 mb-4">
                           <strong>Details: </strong>
                           <p className="text-sm">{place.placeDetails || 'Not available'}</p>
                         </div>
@@ -128,7 +128,7 @@ function PlacesToVisit({ trip }) {
                           </div>
                         )}
 
-                        <div className="text-gray-500 text-sm">
+                        <div className="text-gray-500 dark:text-gray-300 text-sm">
                           <strong>Geo Coordinates:</strong>{' '}
                           {place.geo_coordinates ? (
                             <span>

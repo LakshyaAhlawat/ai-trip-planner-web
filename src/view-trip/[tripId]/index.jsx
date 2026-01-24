@@ -46,7 +46,7 @@ function Viewtrip() {
   
   if (notFound) {
     return (
-      <div className='p-10 md:px-20 lg:px-44 xl:px-56 flex flex-col items-center justify-center text-center min-h-[60vh] bg-gray-50 dark:bg-slate-950 transition-colors duration-300'>
+      <div className='px-5 sm:px-8 md:px-20 lg:px-32 xl:px-56 py-10 flex flex-col items-center justify-center text-center min-h-[60vh] bg-gray-50 dark:bg-slate-950 transition-colors duration-300'>
         <h2 className='text-2xl font-semibold mb-2'>Trip not found</h2>
         <p className='text-gray-500 mb-6'>This trip may have been deleted or never existed.</p>
         <a
@@ -60,7 +60,7 @@ function Viewtrip() {
   }
 
   return (
-    <div className='p-10 md:px-20 lg:px-44 xl:px-56 bg-gray-50 dark:bg-slate-950 min-h-[80vh] transition-colors duration-300'>
+    <div className='px-5 sm:px-8 md:px-20 lg:px-32 xl:px-56 py-10 bg-gray-50 dark:bg-slate-950 min-h-[80vh] transition-colors duration-300'>
       {/*Information Section*/}
       <InfoSection trip={trip}/>
       {/* Recommended Hotels */}

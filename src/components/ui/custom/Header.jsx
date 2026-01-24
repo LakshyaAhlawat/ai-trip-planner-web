@@ -80,34 +80,37 @@ function Header() {
   };
 
   return (
-    <div className="shadow-sm flex justify-between items-center px-5 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
-      <a href="/" className="flex items-center gap-2">
+    <div className="shadow-sm flex flex-wrap sm:flex-nowrap justify-between items-center gap-3 px-4 sm:px-5 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
+      <a href="/" className="flex items-center gap-2 shrink-0">
         <img src="/logo.svg" alt="Logo" className="h-8" />
       </a>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 justify-end flex-1">
         <button
           type="button"
           onClick={toggleTheme}
-          className="hidden sm:inline-flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+          className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-gray-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
           aria-label="Toggle color theme"
         >
           {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
         {user ? (
-          <div className='flex items-center gap-3'>
-            <a href="/dashboard">
-              <Button variant="outline" className="rounded-full text-sm px-4 hidden md:inline-flex">Dashboard</Button>
-            </a>
-            <a href="/my-trips">
-              <Button variant="outline" className="rounded-full text-sm px-4">My Trips</Button>
-            </a>
-            <a href="/create-trip">
-              <Button variant="outline" className="rounded-full text-sm px-4">+ Create Trips</Button>
-            </a>
+          <div className='flex items-center gap-2 sm:gap-3'>
+            {/* Main nav actions are hidden on very small screens to avoid wrapping */}
+            <div className="hidden sm:flex items-center gap-2 sm:gap-3">
+              <a href="/dashboard">
+                <Button variant="outline" className="rounded-full text-sm px-4 hidden md:inline-flex">Dashboard</Button>
+              </a>
+              <a href="/my-trips">
+                <Button variant="outline" className="rounded-full text-sm px-4">My Trips</Button>
+              </a>
+              <a href="/create-trip">
+                <Button variant="outline" className="rounded-full text-sm px-4">+ Create Trips</Button>
+              </a>
+            </div>
 
             <Popover>
               <PopoverTrigger>
-                <button className='flex items-center gap-2 rounded-full bg-gray-100 hover:bg-gray-200 px-2 py-1 transition-colors'>
+                <button className='flex items-center gap-2 rounded-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 px-2 py-1 transition-colors'>
                   {user?.picture && !avatarError ? (
                     <img
                       src={user.picture}
@@ -120,18 +123,38 @@ function Header() {
                       {getUserInitials()}
                     </div>
                   )}
-                  <span className='hidden sm:inline text-xs text-gray-700 max-w-[120px] truncate'>
+                  <span className='hidden sm:inline text-xs text-gray-700 dark:text-gray-200 max-w-[120px] truncate'>
                     {user?.name}
                   </span>
                 </button>
               </PopoverTrigger>
-              <PopoverContent align="end" className='w-52 text-sm'>
+              <PopoverContent align="end" className='w-52 text-sm bg-popover text-popover-foreground'>
                 <div className='mb-3'>
-                  <p className='font-medium truncate'>{user?.name}</p>
-                  <p className='text-xs text-gray-500 truncate'>{user?.email}</p>
+                  <p className='font-medium truncate text-foreground'>{user?.name}</p>
+                  <p className='text-xs text-gray-500 dark:text-gray-300 truncate'>{user?.email}</p>
+                </div>
+                <div className="mb-2 space-y-1">
+                  <a
+                    href="/dashboard"
+                    className="block w-full rounded-md px-2 py-1 text-left hover:bg-accent hover:text-accent-foreground text-xs"
+                  >
+                    Dashboard
+                  </a>
+                  <a
+                    href="/my-trips"
+                    className="block w-full rounded-md px-2 py-1 text-left hover:bg-accent hover:text-accent-foreground text-xs"
+                  >
+                    My Trips
+                  </a>
+                  <a
+                    href="/create-trip"
+                    className="block w-full rounded-md px-2 py-1 text-left hover:bg-accent hover:text-accent-foreground text-xs"
+                  >
+                    + Create Trips
+                  </a>
                 </div>
                 <button
-                  className='w-full text-left text-red-500 hover:bg-red-50 rounded-md px-2 py-1'
+                  className='w-full text-left text-red-500 hover:bg-red-50 dark:hover:bg-red-950 rounded-md px-2 py-1'
                   onClick={() => {
                     googleLogout();
                     localStorage.clear();
@@ -145,7 +168,7 @@ function Header() {
             </Popover>
           </div>
         ) : (
-          <Button onClick={() => setOpenDialog(true)} className="rounded-full text-sm px-5">
+          <Button onClick={() => setOpenDialog(true)} className="rounded-full text-xs sm:text-sm px-4 sm:px-5 py-2">
             Sign In
           </Button>
         )}

@@ -117,12 +117,13 @@ function MyTrips() {
   };
 
   return (
-    <div className="sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10 pb-16 bg-gray-50 dark:bg-slate-950 min-h-[80vh] transition-colors duration-300">
+    <div className="px-5 sm:px-6 md:px-10 lg:px-20 xl:px-32 mt-10 pb-16 bg-gray-50 dark:bg-slate-950 min-h-[80vh] transition-colors duration-300">
+      <div className="max-w-5xl mx-auto">
       <h2 className="font-bold text-3xl">My Trips</h2>
-      <p className="mt-1 text-sm text-gray-500 max-w-xl">
+      <p className="mt-1 text-sm text-gray-500 dark:text-gray-300 max-w-xl">
         Browse, search, favorite and manage all the trips you&apos;ve created with the planner.
       </p>
-      <div className="mt-5 flex flex-col md:flex-row gap-3 md:items-center justify-between rounded-2xl border bg-white/70 px-4 py-3 shadow-sm backdrop-blur-sm">
+      <div className="mt-5 flex flex-col md:flex-row gap-3 md:items-center justify-between rounded-2xl border bg-white/70 dark:bg-slate-900/70 px-4 py-3 shadow-sm backdrop-blur-sm">
         <Input
           placeholder="Search by destination..."
           value={searchTerm}
@@ -136,7 +137,7 @@ function MyTrips() {
             className={`text-xs md:text-sm px-3 py-1.5 rounded-full border transition-colors ${
               viewFilter === "all"
                 ? "bg-gray-900 text-white border-gray-900"
-                : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100"
+                : "bg-white text-gray-700 dark:bg-slate-900 dark:text-gray-200 border-gray-200 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-slate-800"
             }`}
           >
             All trips
@@ -147,7 +148,7 @@ function MyTrips() {
             className={`text-xs md:text-sm px-3 py-1.5 rounded-full border transition-colors ${
               viewFilter === "favorites"
                 ? "bg-amber-500 text-white border-amber-500"
-                : "bg-white text-gray-700 border-gray-200 hover:bg-amber-50"
+                : "bg-white text-gray-700 dark:bg-slate-900 dark:text-gray-200 border-gray-200 dark:border-slate-700 hover:bg-amber-50 dark:hover:bg-amber-900/40"
             }`}
           >
             Favorites
@@ -155,7 +156,7 @@ function MyTrips() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="border rounded-md px-3 py-2 text-xs md:text-sm bg-white"
+            className="border rounded-md px-3 py-2 text-xs md:text-sm bg-white dark:bg-slate-900 dark:text-gray-100 dark:border-slate-700"
           >
             <option value="newest">Newest first</option>
             <option value="oldest">Oldest first</option>
@@ -164,7 +165,7 @@ function MyTrips() {
       </div>
 
       {filteredTrips.length === 0 ? (
-        <div className="mt-10 text-center text-gray-500">
+        <div className="mt-10 text-center text-gray-500 dark:text-gray-300">
           {userTrips.length === 0
             ? "No trips found yet. Start by creating your first trip from the home page."
             : "No trips match your current search or filters."}
@@ -183,7 +184,7 @@ function MyTrips() {
       )}
 
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="max-w-md bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-50 border border-gray-200 dark:border-slate-700">
+        <DialogContent className="max-w-md bg-background text-foreground border border-border">
           <DialogHeader>
             <DialogTitle>Delete this trip?</DialogTitle>
             <DialogDescription>
@@ -193,11 +194,11 @@ function MyTrips() {
           </DialogHeader>
 
           {deleteTrip && (
-            <div className="mt-4 rounded-xl border bg-gray-50 p-4 text-sm text-gray-700 space-y-1">
+            <div className="mt-4 rounded-xl border bg-card text-card-foreground dark:bg-slate-900/70 p-4 text-sm text-gray-700 dark:text-gray-200 space-y-1">
               <p className="font-medium truncate">
                 {deleteTrip?.userSelection?.location?.label || "Untitled trip"}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 {deleteTrip?.userSelection?.noOfDays || "-"} days ·{" "}
                 {deleteTrip?.userSelection?.budget || "No budget set"}
               </p>
@@ -224,6 +225,7 @@ function MyTrips() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }

@@ -66,7 +66,7 @@ function UserTripCardItem({ trip, onDelete, onToggleFavorite }) {
 
   return (
     <Link to={`/view-trip/${trip?.id}`} className="block group">
-      <div className="relative bg-white rounded-xl shadow-md hover:shadow-2xl p-4 hover:scale-[1.03] hover:-translate-y-1 transition-transform transition-shadow duration-300 overflow-hidden">
+      <div className="relative bg-card text-card-foreground dark:bg-slate-900 dark:text-slate-50 rounded-xl shadow-md hover:shadow-2xl border border-gray-100 dark:border-slate-800 p-4 hover:scale-[1.03] hover:-translate-y-1 transition-transform transition-shadow transition-colors duration-300 overflow-hidden">
         {/* Favorite toggle */}
         <button
           type="button"
@@ -75,7 +75,7 @@ function UserTripCardItem({ trip, onDelete, onToggleFavorite }) {
             e.stopPropagation();
             onToggleFavorite && onToggleFavorite(trip);
           }}
-          className="absolute top-3 left-3 z-10 inline-flex items-center justify-center rounded-full bg-white/90 text-amber-500 hover:bg-amber-50 border border-amber-100 p-1.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-3 left-3 z-10 inline-flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-900/90 text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950 border border-amber-100 dark:border-amber-300/60 p-1.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
           aria-label={trip?.isFavorite ? "Unfavorite trip" : "Favorite trip"}
         >
           {trip?.isFavorite ? (
@@ -87,7 +87,7 @@ function UserTripCardItem({ trip, onDelete, onToggleFavorite }) {
         <button
           type="button"
           onClick={handleDeleteClick}
-          className="absolute top-3 right-3 z-10 inline-flex items-center justify-center rounded-full bg-white/90 text-red-500 hover:bg-red-50 border border-red-100 p-1.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-3 right-3 z-10 inline-flex items-center justify-center rounded-full bg-white/90 dark:bg-slate-900/90 text-red-500 hover:bg-red-50 dark:hover:bg-red-950 border border-red-100 dark:border-red-300/60 p-1.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
           aria-label="Delete trip"
         >
           <FiTrash2 className="h-4 w-4" />
@@ -102,7 +102,7 @@ function UserTripCardItem({ trip, onDelete, onToggleFavorite }) {
           <h2 className="font-semibold text-base truncate">
             {trip?.userSelection?.location?.label}
           </h2>
-          <h2 className="text-xs text-gray-500 mt-1">
+          <h2 className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             {trip?.userSelection?.noOfDays} days · {trip?.userSelection?.budget} budget
           </h2>
         </div>

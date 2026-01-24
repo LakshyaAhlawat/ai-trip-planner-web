@@ -246,16 +246,17 @@ function CreateTrip() {
   const progressPercent = (completedFields / 4) * 100;
 
   return (
-    <div className="sm:px-10 md:px-32 lg:px-56 xl:px-10 px-5 mt-10 pb-16 bg-gray-50 dark:bg-slate-950 min-h-[80vh] transition-colors duration-300">
+    <div className="px-5 sm:px-6 md:px-10 lg:px-20 xl:px-32 mt-10 pb-16 bg-gray-50 dark:bg-slate-950 min-h-[80vh] transition-colors duration-300">
+      <div className="max-w-4xl mx-auto">
       <h2 className="font-bold text-3xl">Tell us your Travel preference</h2>
-      <p className="mt-3 text-gray-500 text-xl">
+      <p className="mt-3 text-gray-500 dark:text-gray-300 text-xl">
         Just provide some basic information, and our trip planner will generate
         a customized itinerary based on your preference
       </p>
 
       {/* Progress Indicator */}
       <div className="mt-6">
-        <div className="flex justify-between text-sm text-gray-500 mb-1">
+        <div className="flex justify-between text-sm text-gray-500 dark:text-gray-300 mb-1">
           <span>Trip setup progress</span>
           <span>{Math.round(progressPercent)}%</span>
         </div>
@@ -291,17 +292,17 @@ function CreateTrip() {
               </p>
             )}
             {suggestions.length > 0 && (
-              <div className="absolute z-20 mt-1 w-full max-h-60 overflow-auto rounded-md border bg-white shadow-lg text-sm">
+              <div className="absolute z-20 mt-1 w-full max-h-60 overflow-auto rounded-md border bg-white dark:bg-slate-900 dark:border-slate-700 shadow-lg text-sm">
                 {suggestions.map((s) => (
                   <button
                     type="button"
                     key={s.id}
                     onClick={() => handleSelectSuggestion(s)}
-                    className="w-full text-left px-3 py-2 hover:bg-gray-100"
+                    className="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-slate-800"
                   >
-                    <div className="font-medium text-gray-800">{s.name}</div>
+                    <div className="font-medium text-gray-800 dark:text-gray-100">{s.name}</div>
                     {s.address && (
-                      <div className="text-xs text-gray-500">{s.address}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{s.address}</div>
                     )}
                   </button>
                 ))}
@@ -324,7 +325,7 @@ function CreateTrip() {
 
       <div>
         <h2 className="text-xl my-3 font-medium">What is your Budget?</h2>
-        <div className="grid grid-cols-3 gap-5 mt-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-5">
           {SelectBudgetOptions.map((item, index) => {
             return (
               <div
@@ -350,7 +351,7 @@ function CreateTrip() {
         <h2 className="text-xl my-3 font-medium">
           Who do you plan on traveling with on your next adventure?
         </h2>
-        <div className="grid grid-cols-3 gap-5 mt-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-5">
           {SelectTravelesList.map((item, index) => {
             return (
               <div
@@ -395,7 +396,7 @@ function CreateTrip() {
 
       <div className="mt-8">
         <h2 className="text-xl my-3 font-medium">What are you most interested in?</h2>
-        <p className="text-sm text-gray-500 mb-3">Select a few to help us fine-tune your itinerary.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-300 mb-3">Select a few to help us fine-tune your itinerary.</p>
         <div className="flex flex-wrap gap-2">
           {InterestTags.map((interest) => {
             const isActive = Array.isArray(formData?.interests) && formData.interests.includes(interest);
@@ -405,7 +406,7 @@ function CreateTrip() {
                 key={interest}
                 onClick={() => toggleInterest(interest)}
                 className={`px-3 py-1 rounded-full text-xs border transition-all
-                  ${isActive ? "bg-emerald-500 text-white border-emerald-500" : "bg-white text-gray-700 hover:bg-gray-100"}`}
+                  ${isActive ? "bg-emerald-500 text-white border-emerald-500 dark:bg-emerald-500 dark:text-white" : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-slate-800 dark:text-gray-100 dark:hover:bg-slate-700"}`}
               >
                 {interest}
               </button>
@@ -415,12 +416,12 @@ function CreateTrip() {
       </div>
 
       {/* Live Summary */}
-      <div className="mt-10 border rounded-xl p-5 bg-gray-50">
+      <div className="mt-10 border rounded-xl p-5 bg-card text-card-foreground dark:bg-slate-900">
         <h3 className="font-semibold mb-2">Your trip summary</h3>
-        <p className="text-sm text-gray-600 mb-3">
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
           We&apos;ll use these details to generate a personalized itinerary.
         </p>
-        <div className="text-sm text-gray-700 space-y-1">
+        <div className="text-sm text-gray-700 dark:text-gray-200 space-y-1">
           <p>
             <span className="font-medium">Destination:</span>{" "}
             {formData?.location?.label || "Not chosen yet"}
@@ -461,7 +462,7 @@ function CreateTrip() {
       </div>
 
       <Dialog open={openDialog} onOpenChange={(open) => setOpenDialog(open)}>
-        <DialogContent className="bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-50 border border-gray-200 dark:border-slate-700">
+        <DialogContent className="bg-background text-foreground border border-border">
           <DialogHeader>
             <DialogDescription>
               <img src="/logo.svg" />
@@ -481,6 +482,7 @@ function CreateTrip() {
 
         </DialogContent>
       </Dialog>
+      </div>
     </div>
   );
 }
