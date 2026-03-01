@@ -1,37 +1,32 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-
-const apiKey =import.meta.env.VITE_GOOGLE_GEMINI_AI_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey);
-
-const model = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash-exp",
-  systemInstruction: "Generate travel plan for location: Las Vegas, for 3 days for couple with a cheap budget , Give me a hotels option list with HotelName, HotelAddress,Price, Hotel Image url, geo coordinates, rating, descriptions and suggest itinerary with placeName, placeDetails,Place image Url, Geo coordinates, ticket pricing, time to travel to each location for 3 days with each day plan  with best time to visit in JSON format\n",
+const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+const groq = new Groq({
+  apiKey: apiKey,
+  dangerouslyAllowBrowser: true,
 });
 
-const generationConfig = {
-  temperature: 1,
-  topP: 0.95,
-  topK: 40,
-  maxOutputTokens: 8192,
-  responseMimeType: "application/json",
+export const chatSession = {
+  sendMessage: async (prompt) => {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional travel assistant. Generate a travel plan in JSON format. The response must be a single JSON object with 'hotel_options' (array of hotels) and 'itinerary' (object with 'day1', 'day2', etc.). Each hotel must have: HotelName, HotelAddress, Price, Hotel_Image_url, geo_coordinates (latitude, longitude), rating, and descriptions. Each itinerary day must have: theme, best_time_to_visit, and 'places' (array of places). Each place must have: placeName, placeDetails, Place_image_Url, geo_coordinates (latitude, longitude), ticket_pricing, and time_to_travel. Do not include any text outside the JSON object.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: "llama-3.3-70b-versatile",
+      response_format: { type: "json_object" },
+      max_tokens: 8000,
+    });
+    return {
+      response: {
+        text: () => chatCompletion.choices[0].message.content,
+      },
+    };
+  },
 };
-
-
-  export const chatSession = model.startChat({
-    generationConfig,
-    history: [
-      {
-        role: "user",
-        parts: [
-          {text: "Generate travel plan for location: Las Vegas, for 3 days for couple with a cheap budget , Give me a hotels option list with HotelName, HotelAddress,Price, Hotel Image url, geo coordinates, rating, descriptions and suggest itinerary with placeName, placeDetails,Place image Url, Geo coordinates, ticket pricing, time to travel to each location for 3 days with each day plan  with best time to visit in JSON format\n\n"},
-        ],
-      },
-      {
-        role: "model",
-        parts: [
-          {text: "```json\n{\n  \"trip_details\": {\n    \"location\": \"Las Vegas\",\n    \"duration\": \"3 Days\",\n    \"travelers\": \"Couple\",\n    \"budget\": \"Cheap\"\n  },\n  \"hotel_options\": [\n    {\n      \"HotelName\": \"Circus Circus Hotel & Casino\",\n      \"HotelAddress\": \"2880 S Las Vegas Blvd, Las Vegas, NV 89109\",\n      \"Price\": \"$40 - $80 per night\",\n      \"Hotel_Image_url\": \"https://example.com/circuscircus.jpg\",\n      \"geo_coordinates\": {\n        \"latitude\": 36.1461,\n        \"longitude\": -115.1668\n      },\n      \"rating\": 3.5,\n      \"descriptions\": \"A family-friendly hotel on the Strip with affordable rooms and a variety of entertainment options.\"\n    },\n    {\n      \"HotelName\": \"Strat Hotel, Casino & Skypod\",\n        \"HotelAddress\": \"2000 S Las Vegas Blvd, Las Vegas, NV 89104\",\n      \"Price\": \"$50 - $90 per night\",\n        \"Hotel_Image_url\": \"https://example.com/strathotel.jpg\",\n      \"geo_coordinates\": {\n        \"latitude\": 36.1642,\n        \"longitude\": -115.1532\n      },\n      \"rating\": 4.0,\n      \"descriptions\": \"Located off the Strip, this hotel offers stunning city views and a variety of dining and entertainment options at a lower price point.\"\n    },\n    {\n      \"HotelName\": \"Excalibur Hotel & Casino\",\n      \"HotelAddress\": \"3850 S Las Vegas Blvd, Las Vegas, NV 89109\",\n      \"Price\": \"$50 - $100 per night\",\n        \"Hotel_Image_url\": \"https://example.com/excalibur.jpg\",\n      \"geo_coordinates\": {\n        \"latitude\": 36.0985,\n        \"longitude\": -115.1747\n      },\n       \"rating\": 3.8,\n      \"descriptions\": \"A themed hotel with a medieval castle design offering budget-friendly rooms and entertainment.\"\n    }\n    ,\n    {\n      \"HotelName\": \"OYO Hotel and Casino Las Vegas\",\n       \"HotelAddress\": \"115 E Tropicana Ave, Las Vegas, NV 89109\",\n      \"Price\": \"$35 - $75 per night\",\n      \"Hotel_Image_url\": \"https://example.com/oyohotel.jpg\",\n     \"geo_coordinates\": {\n       \"latitude\": 36.1021,\n       \"longitude\": -115.1702\n     },\n      \"rating\": 3.2,\n      \"descriptions\":\"A budget-friendly hotel located near the Strip with basic accommodations.\"\n    }\n  ],\n  \"itinerary\": {\n    \"day1\": {\n      \"theme\": \"Exploring the Strip (South)\",\n      \"best_time_to_visit\":\"Morning and Evening\",\n      \"places\": [\n        {\n          \"placeName\": \"Welcome to Fabulous Las Vegas Sign\",\n          \"placeDetails\": \"Take iconic photos at the famous welcome sign. It's free and a must-do!\",\n           \"Place_image_Url\": \"https://example.com/welcomesign.jpg\",\n          \"geo_coordinates\": {\n            \"latitude\": 36.0829,\n            \"longitude\": -115.1726\n          },\n          \"ticket_pricing\": \"Free\",\n          \"time_to_travel\": \"5-10 minutes from nearby hotels\"\n        },\n        {\n          \"placeName\": \"Bellagio Conservatory & Botanical Gardens\",\n          \"placeDetails\": \"Explore the beautifully designed seasonal displays. It's free to enter.\",\n          \"Place_image_Url\": \"https://example.com/bellagiogardens.jpg\",\n          \"geo_coordinates\": {\n             \"latitude\": 36.1129,\n            \"longitude\": -115.1742\n          },\n          \"ticket_pricing\": \"Free\",\n          \"time_to_travel\": \"10-15 minutes from the Welcome Sign\"\n        },\n        {\n          \"placeName\": \"Fountains of Bellagio\",\n           \"placeDetails\":\"Watch the mesmerizing water show choreographed to music and lights.\",\n           \"Place_image_Url\": \"https://example.com/fountainsofbellagio.jpg\",\n            \"geo_coordinates\": {\n              \"latitude\":36.1124,\n              \"longitude\": -115.1738\n            },\n          \"ticket_pricing\": \"Free\",\n          \"time_to_travel\": \"Adjacent to the Conservatory\"\n        },\n        {\n          \"placeName\": \"Paris Las Vegas\",\n           \"placeDetails\":\"Wander through the Parisian-themed hotel and enjoy the free street entertainment and views of the Eiffel Tower replica.\",\n           \"Place_image_Url\": \"https://example.com/parislv.jpg\",\n            \"geo_coordinates\": {\n               \"latitude\":36.1121,\n               \"longitude\": -115.1717\n            },\n           \"ticket_pricing\":\"Free to walk around (fee for Eiffel Tower Experience)\",\n           \"time_to_travel\": \"5-10 minutes walk from Bellagio\"\n        }\n      ]\n    },\n    \"day2\": {\n      \"theme\": \"Downtown Las Vegas & Fremont Street\",\n      \"best_time_to_visit\":\"Evening\",\n      \"places\": [\n        {\n          \"placeName\": \"Fremont Street Experience\",\n           \"placeDetails\":\"Enjoy the vibrant light shows and street performers at night under the Viva Vision canopy.\",\n            \"Place_image_Url\": \"https://example.com/fremontstreet.jpg\",\n            \"geo_coordinates\": {\n             \"latitude\": 36.1701,\n             \"longitude\": -115.1400\n            },\n          \"ticket_pricing\": \"Free\",\n          \"time_to_travel\": \"20-30 minutes drive from the Strip\"\n        },\n        {\n           \"placeName\": \"Container Park\",\n          \"placeDetails\":\"Explore the unique shopping and dining options built from shipping containers.\",\n            \"Place_image_Url\": \"https://example.com/containerpark.jpg\",\n             \"geo_coordinates\": {\n               \"latitude\": 36.1685,\n               \"longitude\": -115.1384\n              },\n           \"ticket_pricing\": \"Free to enter (costs for shopping/dining)\",\n          \"time_to_travel\": \"Walking distance from Fremont Street\"\n        },\n        {\n          \"placeName\": \"The Mob Museum\",\n          \"placeDetails\":\"Learn about the history of organized crime in America.\",\n          \"Place_image_Url\":\"https://example.com/mobmuseum.jpg\",\n          \"geo_coordinates\":{\n            \"latitude\":36.1692,\n            \"longitude\":-115.1414\n          },\n          \"ticket_pricing\": \"$30 per person\",\n          \"time_to_travel\": \"Walking distance from Fremont Street\"\n        }\n      ]\n    },\n    \"day3\": {\n      \"theme\": \"Relaxing and Free Attractions\",\n      \"best_time_to_visit\":\"Afternoon\",\n      \"places\": [\n         {\n          \"placeName\": \"The Venetian & Grand Canal Shoppes\",\n          \"placeDetails\":\"Wander through the canals and streets of Venice inside the hotel, with free sights and sounds.\",\n           \"Place_image_Url\": \"https://example.com/venetian.jpg\",\n           \"geo_coordinates\":{\n              \"latitude\":36.1213,\n              \"longitude\":-115.1698\n           },\n          \"ticket_pricing\": \"Free to walk around (gondola rides are extra)\",\n          \"time_to_travel\": \"10-15 minutes drive from the previous day\"\n        },\n        {\n          \"placeName\": \"The LINQ Promenade\",\n           \"placeDetails\":\"Stroll through the outdoor entertainment district, with free activities and views.\",\n           \"Place_image_Url\": \"https://example.com/linqpromenade.jpg\",\n            \"geo_coordinates\":{\n                \"latitude\":36.1174,\n                \"longitude\":-115.1692\n            },\n          \"ticket_pricing\":\"Free to walk around (costs for activities like the High Roller)\",\n          \"time_to_travel\":\"5-10 minutes walk from the Venetian\"\n\n        },\n        {\n          \"placeName\": \"Explore local shops\",\n          \"placeDetails\": \"Explore local shops at the Fashion Show Mall or other locations along the strip for souvenirs.\",\n           \"Place_image_Url\": \"https://example.com/localshops.jpg\",\n          \"geo_coordinates\": {\n             \"latitude\":36.1266,\n              \"longitude\":-115.1684\n          },\n          \"ticket_pricing\": \"Free to browse\",\n          \"time_to_travel\":\"Walking distance from The LINQ\"\n        }\n      ]\n    }\n  }\n}\n```"},
-        ],
-      },
-    ],
-  });

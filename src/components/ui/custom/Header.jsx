@@ -109,7 +109,7 @@ function Header() {
             </div>
 
             <Popover>
-              <PopoverTrigger>
+              <PopoverTrigger asChild>
                 <button className='flex items-center gap-2 rounded-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 px-2 py-1 transition-colors'>
                   {user?.picture && !avatarError ? (
                     <img
@@ -177,18 +177,20 @@ function Header() {
       <Dialog open={openDialog} onOpenChange={(open) => setOpenDialog(open)}>
         <DialogContent className="bg-white dark:bg-slate-900 text-gray-900 dark:text-gray-50 border border-gray-200 dark:border-slate-700">
           <DialogHeader>
-            <DialogDescription>
-              <img src="/logo.svg" />
-              <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
-              <p>Sign In to the App with Google authentication Securely</p>
+            <DialogDescription asChild>
+              <div>
+                <img src="/logo.svg" />
+                <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
+                <p>Sign In to the App with Google authentication Securely</p>
 
-              <Button
-                onClick={login}
-                className="w-full mt-5 flex gap-4 items-center"
-              >
-                <FcGoogle className="h-7 w-7" />
-                Sign In with Google
-              </Button>
+                <Button
+                  onClick={login}
+                  className="w-full mt-5 flex gap-4 items-center"
+                >
+                  <FcGoogle className="h-7 w-7" />
+                  Sign In with Google
+                </Button>
+              </div>
             </DialogDescription>
           </DialogHeader>
           {/* DialogClose component to close the dialog */}

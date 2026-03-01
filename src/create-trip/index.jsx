@@ -464,18 +464,20 @@ function CreateTrip() {
       <Dialog open={openDialog} onOpenChange={(open) => setOpenDialog(open)}>
         <DialogContent className="bg-background text-foreground border border-border">
           <DialogHeader>
-            <DialogDescription>
-              <img src="/logo.svg" />
-              <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
-              <p>Sign In to the App with Google authentication Securely</p>
+            <DialogDescription asChild>
+              <div>
+                <img src="/logo.svg" />
+                <h2 className="font-bold text-lg mt-7">Sign In With Google</h2>
+                <p>Sign In to the App with Google authentication Securely</p>
 
-              <Button
-                onClick={login}
-                className="w-full mt-5 flex gap-4 items-center"
-              >
-                <FcGoogle className="h-7 w-7" />
-                Sign In with Google
-              </Button>
+                <Button
+                  onClick={login}
+                  className="w-full mt-5 flex gap-4 items-center"
+                >
+                  <FcGoogle className="h-7 w-7" />
+                  Sign In with Google
+                </Button>
+              </div>
             </DialogDescription>
           </DialogHeader>
           {/* This DialogClose should now close the dialog properly */}
